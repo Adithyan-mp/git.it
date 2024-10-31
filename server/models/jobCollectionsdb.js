@@ -11,6 +11,7 @@ const jobSchema = new mongoose.Schema({
   pay: { type: String, required: true },
   time: { type: String, required: true },
   role: { type: String, required: true },
+  vacancy:{ type: String, required: true },
   description: { type: String, required: true },
   imageUrl: { type: String, default:process.env.PROF_PIC },
   type: { type: String, required: true },

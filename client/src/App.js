@@ -19,7 +19,7 @@ import axios from 'axios'
 import ProfileHeader from './pages/seeker/gigUserProfile/ProfileComponents/ProfileHeader';
 import ProfilePage from './pages/seeker/gigUserProfile/ProfilePage';
 import GigConfirmation from './pages/seeker/GigConfirmations/GigConfirmation.tsx';
-
+import PersonDetails from './pages/Providers/YourGig/PersonDetails/GigList.jsx'
 
 
 axios.defaults.baseURL = process.env.AXIOS_URL || 'http://localhost:5001';
@@ -42,6 +42,7 @@ function App() {
           <Route path='/providerRegistration' element={<ProviderRegistration/>}/>
           <Route path='/seekerprofile/:id' element={<SeekerProfile/>}/>
           <Route path='/yourgig/:id' element={<GigList/>}/>
+          <Route path='/yourgig/:id/:jobId' element={<PersonDetails/>}/>
         </Routes>
       </BrowserRouter>
     </div>

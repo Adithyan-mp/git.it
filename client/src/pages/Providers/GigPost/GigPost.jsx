@@ -3,9 +3,11 @@ import Header from "./Header";
 import GigForm from "./GigForm";
 import ActionButtons from "./ActionButtons";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode"; // Fixed import for jwtDecode
+import {jwtDecode} from "jwt-decode";
+import {useParams}  from "react-router-dom"; // Fixed import for jwtDecode
 
 function ShareOpportunities() {
+  const { id: userId } = useParams();
   const [formData, setFormData] = useState({
     position: "",
     duration: "",
@@ -34,11 +36,9 @@ function ShareOpportunities() {
 
   const handlePost = () => {
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
+      if (userId) {
         // console.log("Token found");
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId; 
+         
         // console.log("Decoded token:", decodedToken);
         console.log("Form Data:", userId);
 

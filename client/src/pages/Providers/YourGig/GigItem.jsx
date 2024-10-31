@@ -1,8 +1,8 @@
 import React from 'react';
-import { IoIosPeople } from "react-icons/io";
-import { IoMdArrowDropright } from "react-icons/io";
+import { IoIosPeople, IoMdArrowDropright } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
-function GigItem({ title, applicants, status }) {
+function GigItem({ title, applicants, jobId, userId }) {
   return (
     <article className="py-8 px-10 mt-8 bg-white border border-gray-300 rounded-xl shadow-lg w-full max-w-[1200px] max-md:px-5 ml-[20px]">
       <div className="flex gap-8 max-md:flex-col justify-between items-center">
@@ -22,10 +22,10 @@ function GigItem({ title, applicants, status }) {
 
         {/* More Details Section */}
         <div className="flex items-center gap-2 text-xl text-blue-600 font-medium hover:underline">
-          <a href="#" className="flex items-center">
+          <Link to={`/yourgig/${userId}/${jobId}`} className="flex items-center">
             More details
             <IoMdArrowDropright className="text-4xl ml-2" />
-          </a>
+          </Link>
         </div>
       </div>
     </article>

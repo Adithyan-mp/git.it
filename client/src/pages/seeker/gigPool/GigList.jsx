@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import GigCard from './GigCard';
 import axios from 'axios';
+import {useParams} from 'react-router-dom';
 
 const GigList = ({ selectedCategory, searchTerm, setSearchTerm, resetSelectedCategory }) => {
+  const {id:userId} = useParams();
   const [gigs, setGigs] = useState([]);
   const [filteredGigs, setFilteredGigs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +20,7 @@ const GigList = ({ selectedCategory, searchTerm, setSearchTerm, resetSelectedCat
     setError(null);
     try {
       const response = await axios.get('/api/details', {
-        params: { page: currentPage, limit: gigsPerPage },
+        params: { page: currentPage, limit: gigsPerPage ,userId:userId},
       });
       setGigs(response.data.jobs);
       setFilteredGigs(response.data.jobs); 

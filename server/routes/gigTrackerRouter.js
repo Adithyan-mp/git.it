@@ -10,7 +10,7 @@ router.get('/status', async (req, res) => {
   try {
     // Fetch pending and approved job applications
     const pendingApplications = await Applicationdb.find({ seekerId: userid, status: 'pending' });
-    const approvedApplications = await Applicationdb.find({ seekerId: userid, status: 'accepted' });
+    const approvedApplications = await Applicationdb.find({ seekerId: userid, status: 'approved' });
 
     // Extract job IDs from applications
     const pendingJobIds = pendingApplications.map(app => app.jobId);

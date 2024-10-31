@@ -4,7 +4,6 @@ const applicationSchema = new mongoose.Schema({
   jobId: {
     type: String,
     required: true,
-    unique:true,
   },
   seekerId: {
     type: String,

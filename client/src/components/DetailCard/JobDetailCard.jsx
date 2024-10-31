@@ -19,6 +19,7 @@ const JobDetailsCard = ({ job, onClose, seekerId }) => {
       console.log('Application submitted:', response.data);
       // Optionally, you can close the modal or show a success message
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error applying for job:', error);
       // Handle error (e.g., show an error message to the user)

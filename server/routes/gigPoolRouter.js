@@ -2,54 +2,59 @@ const express = require('express');
 const JobCollection = require('../models/jobCollectionsdb');
 const router = express.Router();
 const Application = require('../models/ApplicationsCollectionsdb');
+const Seeker = require('../models/seekerCollectionsdb');
 
-// Handle GET request for job details with pagination
+// Handle GET request for job details with pagination, excluding applied jobs
 router.get('/details', async (req, res) => {
-    const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit to 10
+    const { page = 1, limit = 10, userId } = req.query;
     const options = {
         page: parseInt(page),
         limit: parseInt(limit),
     };
 
     try {
-        // Fetch jobs with pagination
-        const jobs = await JobCollection.find()
+        const seeker = await Seeker.findById(userId);
+        if (!seeker) return res.status(404).json({ message: 'Seeker not found' });
+
+        const appliedJobIds = seeker.appliedJobs;
+
+        // Fetch jobs excluding those in appliedJobs with pagination
+        const jobs = await JobCollection.find({ jobId: { $nin: appliedJobIds } })
             .skip((options.page - 1) * options.limit)
             .limit(options.limit)
             .exec();
 
-        const totalJobs = await JobCollection.countDocuments(); // Total number of jobs
+        const totalJobs = await JobCollection.countDocuments({ _id: { $nin: appliedJobIds } });
 
         res.json({
             totalJobs,
-            totalPages: Math.ceil(totalJobs / options.limit), // Calculate total pages
+            totalPages: Math.ceil(totalJobs / options.limit),
             currentPage: options.page,
-            jobs, // Send paginated jobs list
+            jobs,
         });
     } catch (error) {
-        console.error('Error fetching job details:', error);
+        console.error('Error fetching job details:', error.message);
         return res.status(500).json({ message: 'Failed to retrieve job details' });
     }
 });
 
 // Handle search request with pagination
 router.get('/search', async (req, res) => {
-    const searchTerm = req.query.searchTerm || ''; // Search term from query
-    const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit to 10
+    const searchTerm = req.query.searchTerm || '';
+    const { page = 1, limit = 10 } = req.query;
     const options = {
         page: parseInt(page),
         limit: parseInt(limit),
     };
 
     try {
-        // Perform search with regex matching in multiple fields
         const jobs = await JobCollection.find({
             $or: [
-                { title: { $regex: searchTerm, $options: 'i' } },  // Case-insensitive search in title
-                { company: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in company
-                { role: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in role
-                { description: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in description
-                { type: { $regex: searchTerm, $options: 'i' } }, // Case-insensitive search in type
+                { title: { $regex: searchTerm, $options: 'i' } },
+                { company: { $regex: searchTerm, $options: 'i' } },
+                { role: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } },
+                { type: { $regex: searchTerm, $options: 'i' } },
             ]
         })
         .skip((options.page - 1) * options.limit)
@@ -70,29 +75,26 @@ router.get('/search', async (req, res) => {
             totalJobs,
             totalPages: Math.ceil(totalJobs / options.limit),
             currentPage: options.page,
-            jobs, // Return search results
+            jobs,
         });
     } catch (error) {
-        console.error('Error searching jobs:', error);
+        console.error('Error searching jobs:', error.message);
         return res.status(500).json({ message: 'Failed to search for jobs' });
     }
 });
 
 // Handle category-based filtering with pagination
 router.get('/topCategories', async (req, res) => {
-    const selectedCategory = req.query.selectedCategory || ''; // Category from query
-    const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit to 10
+    const selectedCategory = req.query.selectedCategory || '';
+    const { page = 1, limit = 10 } = req.query;
     const options = {
         page: parseInt(page),
         limit: parseInt(limit),
     };
 
     try {
-        if (!selectedCategory) {
-            return res.status(400).json({ message: 'Category is required.' });
-        }
+        if (!selectedCategory) return res.status(400).json({ message: 'Category is required.' });
 
-        // Fetch jobs matching the selected category with pagination
         const jobs = await JobCollection.find({ type: { $regex: selectedCategory, $options: 'i' } })
             .skip((options.page - 1) * options.limit)
             .limit(options.limit)
@@ -104,33 +106,38 @@ router.get('/topCategories', async (req, res) => {
             totalJobs,
             totalPages: Math.ceil(totalJobs / options.limit),
             currentPage: options.page,
-            jobs, // Return jobs filtered by category
+            jobs,
         });
     } catch (error) {
-        console.error('Error fetching jobs by category:', error);
+        console.error('Error fetching jobs by category:', error.message);
         return res.status(500).json({ message: 'Failed to retrieve jobs for this category' });
     }
 });
 
+// Handle application submission and update seeker's appliedJobs
 router.post('/applications', async (req, res) => {
     try {
-      const { jobId, seekerId, providerId, status } = req.body;
-    //   console.log('hi')
-      const newApplication = new Application({
-        jobId,
-        seekerId,
-        providerId,
-        status,
-      });
-  
-      // Save the application to the database
-      await newApplication.save();
-  
-      res.status(201).json({ message: 'Application submitted successfully', application: newApplication });
+        const { jobId, seekerId, providerId, status } = req.body;
+
+        const newApplication = new Application({
+            jobId,
+            seekerId,
+            providerId,
+            status,
+        });
+        await newApplication.save();
+
+        await Seeker.findByIdAndUpdate(
+            seekerId,
+            { $addToSet: { appliedJobs: jobId } },
+            { new: true }
+        );
+
+        res.status(201).json({ message: 'Application submitted successfully', application: newApplication });
     } catch (error) {
-      console.error('Error creating application:', error);
-      res.status(500).json({ message: 'Error submitting application', error });
+        console.error('Error creating application:', error.message);
+        res.status(500).json({ message: 'Error submitting application', error });
     }
-  });
+});
 
 module.exports = router;
