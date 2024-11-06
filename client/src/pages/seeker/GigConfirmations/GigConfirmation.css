@@ -1,0 +1,151 @@
+/* GigConfirmation.css */
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light background */
+  }
+  
+  .header {
+    background-color: #343a40; /* Dark background for header */
+    color: white;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px; /* Limit width */
+    margin: 20px 0;
+    border: 1px solid #dee2e6; /* Border for the detail box */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px;
+    background-color: white; /* White background for details */
+  }
+  
+  .message {
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: left;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .accept-button {
+    background-color: #007bff; /* Blue color for accept button */
+    color: white;
+  }
+  
+  .cancel-button {
+    background-color: #ffffff; /* White background for cancel button */
+    border: 1px solid #007bff; /* Blue border for cancel button */
+    color: #007bff; /* Blue text */
+  }
+
+  .divider {
+    height: 80%; /* Example height */
+    margin: auto; /* Centers the divider vertically */
+    border-left: 1px solid gray; /* Divider style */
+  }
+  .move-left {
+    margin-left: -10px; /* Adjust the value as needed */
+  }
+  .confirm-text {
+    margin-top: 10px; /* Adjust as needed */
+    margin-left: 5px; /* Adjust as needed */
+  }
+/* GigConfirmation.css */
+.confirm-text {
+    margin-left: -30px; /* Adjust this value to position it as needed */
+    /* You can add more styles here if needed */
+}
+
+/* GigConfirmation.css */
+@media (max-width: 768px) {
+    .border-l {
+      height: auto; /* Adjust height for mobile view */
+      width: 80%; /* Full width on small screens */
+      margin: 20px 0; /* Add vertical spacing */
+    }
+  
+    /* Ensure GigDetails and ConfirmationMessage stack properly */
+    .flex {
+      flex-direction: column; /* Stack on top of each other */
+      align-items: center; /* Center align */
+    }
+  
+    main {
+      padding: 10px; /* Adjust main padding */
+    }
+  }
+  
+  /* For very small screens, like 320px */
+  @media (max-width: 320px) {
+    .border-l {
+      height: auto; /* Set height for very small screens */
+      width: 90%; /* Almost full width */
+    }
+  
+    /* Additional adjustments if needed */
+  }
+/* GigConfirmation.css */
+
+/* Base styles */
+body {
+    font-family: Arial, sans-serif; /* Use a font that is easy to read on small screens */
+  }
+  
+  h1, h2, h3, p {
+    margin: 0; /* Remove default margins */
+    padding: 0; /* Remove default padding */
+  }
+  
+  /* Styles for larger screens */
+  @media (min-width: 321px) {
+    .confirmation-message {
+      font-size: 1.5rem; /* Default font size for larger screens */
+    }
+  
+    .acceptance-buttons {
+      flex-direction: row; /* Arrange buttons horizontally */
+    }
+  }
+  
+  /* Styles for small screens */
+  @media (max-width: 320px) {
+    .confirmation-message {
+      font-size: 1rem; /* Smaller font size for small screens */
+      text-align: center; /* Center-align text on small screens */
+      margin: 0 10px; /* Add some horizontal margin */
+    }
+  
+    .acceptance-buttons {
+      flex-direction: column; /* Arrange buttons vertically */
+      align-items: center; /* Center-align buttons */
+      width: 100%; /* Full width for buttons */
+    }
+  
+    .acceptance-buttons button {
+      width: 90%; /* Buttons take 90% of the screen width */
+      margin: 5px 0; /* Add vertical spacing between buttons */
+    }
+  }
+    
